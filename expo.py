@@ -1,95 +1,74 @@
 import streamlit as st
 
-# تصحيح السطر الرابع (كان فيه كلمة زائدة)
-st.set_page_config(page_title="الجسر المهني - تجربة الطالب", layout="wide")
+# إعداد الصفحة
+st.set_page_config(page_title="منصة الجسر المهني", layout="wide")
 
-# إضافة التنسيقات (CSS) لتطابق صور الستوري بورد
+# حقن CSS لتصميم يشبه الصور (ألوان ونوع الخط)
 st.markdown("""
     <style>
-    .main { background-color: #f0fdfa; }
-    .stApp { background-image: linear-gradient(to bottom, #f0fdfa, #ffffff); }
-    
-    /* تنسيق البطاقات (Cards) */
-    .feature-card {
-        background-color: white;
-        padding: 25px;
-        border-radius: 15px;
-        border-top: 5px solid #00c2cb;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        text-align: right;
-        margin-bottom: 20px;
-    }
-    
-    .skill-bar {
-        background-color: #00c2cb;
-        color: white;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-    }
-    
-    h1, h2, h3 { color: #1a365d; font-family: 'Cairo', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+    html, body, [class*="css"] { font-family: 'Cairo', sans-serif; text-align: right; }
+    .main { background-color: #f9fdfd; }
+    .stButton>button { background-color: #00c2cb; color: white; border-radius: 10px; width: 100%; height: 50px; font-size: 18px; border: none; }
+    .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border-top: 5px solid #00c2cb; }
+    .step-box { background: #e0f7f7; padding: 15px; border-radius: 10px; text-align: center; border: 1px dashed #00c2cb; }
     </style>
     """, unsafe_allow_html=True)
 
-# الصفحة الرئيسية - الهيدر
-st.markdown("<h1 style='text-align: center;'>مسارك الوظيفي في تخصصك 🚀</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>هذه هي الوظائف والمهارات والتدريبات المناسبة لك بناءً على بياناتك</p>", unsafe_allow_html=True)
+# إدارة الصفحات باستخدام Session State
+if 'page' not in st.session_state:
+    st.session_state.page = 'home'
 
-# قسم الوظائف المناسبة (زي الصور اللي فيها نسب مئوية)
-st.subheader("📍 الوظائف المناسبة لك")
-c1, c2 = st.columns(2)
+# --- الصفحة الأولى: الصفحة الرئيسية ---
+if st.session_state.page == 'home':
+    st.markdown("<h1 style='text-align: center; color: #1a365d;'>نحوّل التخصص الجامعي إلى مسار وظيفي يقودك لسوق العمل بثقة</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>منصة ذكية تربط بين الطلاب، الخريجين، والشركات.. وتغلق فجوة المهارات</p>", unsafe_allow_html=True)
+    
+    col_btn1, col_btn2 = st.columns([1, 1])
+    with col_btn1:
+        if st.button("ابدأ الآن"):
+            st.session_state.page = 'input'
+            st.rerun()
+    with col_btn2:
+        st.button("تعرّف على الفكرة")
 
-with c1:
-    st.markdown("""
-    <div class="feature-card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="skill-bar">85%</span>
-            <h3>مطور واجهات</h3>
-        </div>
-        <p>تصميم وبناء واجهات المستخدم التفاعلية باستخدام أحدث التقنيات</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.divider()
+    st.markdown("<h2 style='text-align: center;'>كيف نساعدك؟</h2>", unsafe_allow_html=True)
+    c1, c2, c3 = st.columns(3)
+    with c3: st.markdown("<div class='step-box'><h3>1</h3><p>اختر هويتك</p></div>", unsafe_allow_html=True)
+    with c2: st.markdown("<div class='step-box'><h3>2</h3><p>أدخل بياناتك</p></div>", unsafe_allow_html=True)
+    with c1: st.markdown("<div class='step-box'><h3>3</h3><p>احصل على مسارك</p></div>", unsafe_allow_html=True)
 
-with c2:
-    st.markdown("""
-    <div class="feature-card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="skill-bar">92%</span>
-            <h3>محلل بيانات</h3>
-        </div>
-        <p>تحليل وتفسير البيانات المعقدة لمساعدة الشركات في اتخاذ القرارات</p>
-    </div>
-    """, unsafe_allow_html=True)
+# --- الصفحة الثانية: إدخال البيانات ---
+elif st.session_state.page == 'input':
+    st.markdown("<h2 style='text-align: center;'>لنبدأ بناء مسارك الوظيفي</h2>", unsafe_allow_html=True)
+    
+    with st.container():
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        uni = st.selectbox("🎓 الجامعة", ["جامعة الملك عبدالعزيز", "جامعة الملك سعود", "جامعة طيبة"])
+        major = st.selectbox("📚 التخصص الجامعي", ["علوم حاسب", "نظم معلومات", "هندسة برمجيات"])
+        year = st.select_slider("📅 السنة الدراسية", options=["سنة تحضيرية", "سنة 2", "سنة 3", "سنة 4", "خريج"])
+        interests = st.multiselect("💡 الاهتمامات المهنية", ["تحليل البيانات", "الأمن السيبراني", "البرمجة", "التصميم"])
+        
+        if st.button("عرض المسار الوظيفي ✨"):
+            st.session_state.page = 'results'
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
-# قسم المهارات المطلوبة (المربعات البيضاء)
-st.divider()
-st.subheader("📊 المهارات المطلوبة")
-col_a, col_b = st.columns(2)
+# --- الصفحة الثالثة: صفحة النتائج ---
+elif st.session_state.page == 'results':
+    st.markdown("<h1 style='text-align: center;'>مسارك الوظيفي في تخصصك 🚀</h1>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("<div class='card'><h3>📍 مطور واجهات</h3><p>نسبة الملاءمة: 85%</p></div>", unsafe_allow_html=True)
+    with col2:
+        st.markdown("<div class='card'><h3>📍 محلل بيانات</h3><p>نسبة الملاءمة: 92%</p></div>", unsafe_allow_html=True)
 
-with col_a:
-    st.info("**مهارات تمتلكها ✅**")
-    st.write("• تحليل البيانات")
-    st.write("• لغة Python")
-    st.write("• العمل الجماعي")
-
-with col_b:
-    st.warning("**مهارات تحتاج تطوير ⚠️**")
-    st.write("• Machine Learning")
-    st.write("• SQL المتقدم")
-    st.write("• إدارة المشاريع")
-
-# البانر السفلي (المربع التركوازي)
-st.markdown("""
-    <div style="background-color: #00c2cb; padding: 40px; border-radius: 20px; text-align: center; color: white;">
-        <h2>ابدأ رحلتك المهنية اليوم</h2>
-        <p>اختر مسارك واطلع على التدريبات والفرص المتاحة</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-if st.button("استكشف المزيد"):
-    st.balloons()
+    st.subheader("📊 المهارات المطلوبة")
+    st.info("✅ مهارات تمتلكها: Python, تحليل البيانات")
+    st.warning("⚠️ مهارات تحتاجها: SQL المتقدم، تعلم الآلة")
+    
+    if st.button("العودة للرئيسية"):
+        st.session_state.page = 'home'
+        st.rerun()
